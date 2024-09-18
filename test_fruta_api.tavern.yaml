@@ -1,0 +1,43 @@
+test_name: Testando endpoints da API de frutas
+
+marks:
+  - usefixtures:
+    - detalhes_login
+
+stages:
+  - name: testando método get 
+    request:
+      url: http://127.0.0.1:5000/frutas
+      method: GET
+      headers:
+        id-token: "{detalhes_login}"
+    response:
+      status_code: 200
+      json:
+        frutas: ["banana", "abacaxi", "manga"]
+
+  - name: testando método get da quantidade de frutas
+    request:
+      url: http://127.0.0.1:5000/frutas/quantidade/abacaxi
+      method: GET
+      headers:
+        id-token: "{detalhes_login}"
+    response:
+      status_code: 200
+      json: 5
+
+---
+
+test_name: Testando caminhos errados de endpoints da API de frutas 
+
+stages:
+  - name: testando método get retornando 401
+    request:
+      url: http://127.0.0.1:5000/frutas
+      method: GET
+      headers:
+        id-token: "token_nao_autorizado"
+    response:
+      status_code: 401
+      json:
+        mensagem: "Token nao autorizado"
